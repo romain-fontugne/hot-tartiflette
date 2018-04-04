@@ -1,5 +1,5 @@
 
-class mapitData(object):
+class MapitData(object):
     """Retrive and format MAP-IT data. """
 
     def __init__(self, fnames= "data/mapit_atlas_builtin_udm_2018-02-1to3.txt" ):

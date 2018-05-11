@@ -12,10 +12,9 @@ from datetime import datetime
 plotSpectrums = False
 plotSignals = False
 minDate = datetime(2017,1,1)
-# minDuration = 90*24
-minSample = 12 
+minSample = 30 
 
-nperseg = 30*24
+nperseg = 4*24
 minRMS = 10 
 
 # initialisation of logger
@@ -39,11 +38,6 @@ if __name__ == "__main__":
     logging.info("Plotting results...")
     # Plot Results
     plt = plotter.Plotter(ihr, wel, mapit)
-    for link, (f, Pxx_spec) in wel.pspec.iteritems():
-        if f[Pxx_spec.argmax()]< 1.0/(3600*24*90):
-            print link
-            plt.signal(link)
-            plt.spectrum(link)
 
     # plt.alarmsDistribution()
     plt.freqRMSscatterplot()
@@ -53,5 +47,11 @@ if __name__ == "__main__":
     if plotSignals:
         logging.info("Plotting signals...")
         plt.allSignals()
+
+    # for link, (f, Pxx_spec) in wel.pspec.iteritems():
+        # if f[Pxx_spec.argmax()]< 1.0/(24*21):
+            # print link
+            # plt.signal(link)
+            # plt.spectrum(link)
 
     logging.info("Number of interdomain links: %s/%s" % ( len(plt.interdomainLinks), plt.nbLinks))

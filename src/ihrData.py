@@ -21,6 +21,8 @@ class IhrData(object):
         self.minDate = minDate
         self.maxDate = None
 
+        self.metric = "diffmedian"
+
 
     def readRawData(self):
         """Grab raw data from ihr and put it in a pandas data frame."""
@@ -31,8 +33,8 @@ class IhrData(object):
             # dataset.append(pd.read_csv( fi, header=None, 
                 # names=["timebin", "ip0", "ip1", "diffmedian", "deviation", "nbprobes"]))
             dataset.append(pd.read_csv(fi, 
-                usecols=["timebin", "link", "diffmedian", "nbprobes"],
-                dtype={"link":str, "diffmedian":float,  "nbprobes":int}))
+                usecols=["timebin", "link", "diffmedian", "medianrtt", "nbprobes"],
+                dtype={"link":str, "diffmedian":float, "medianrtt":float, "nbprobes":int}))
         
         df = pd.concat(dataset)
         df.index = pd.DatetimeIndex(df.timebin)
@@ -50,10 +52,8 @@ class IhrData(object):
         logging.debug("Clean IHR data...")
 
         self.data = self.data[self.data.index >= self.minDate]
-        self.data = self.data[(self.data["diffmedian"]<1000) & (self.data["diffmedian"]>-1000)]
-        # self.data["bin"] = [str(d.year)+str(d.month) for d in self.data.index]
+        self.data = self.data[(self.data[self.metric]<500) & (self.data[self.metric]>0)]
         self.data["bin"] = self.data["link"]+"_"+self.data.index.year.astype(str)+self.data.index.month.astype(str)
-        # self.data = self.data[self.data["nbprobes"]>9]
 
         # Group data monthly and filter out months with insufficient number of samples
         logging.debug("Group data per bin...")
@@ -61,8 +61,17 @@ class IhrData(object):
         logging.debug("Clean IHR data... (bin)")
         for bin, bindata in grouped:
             if len(np.unique(bindata.index))>self.minSample:
+                # Extend the signal to span through the whole month
+                t0 = bindata.index[0]
+                start = datetime(t0.year, t0.month, 1) 
+                end = datetime(t0.year+(t0.month/12), (t0.month%12)+1, 1) 
+                if start not in bindata.index:
+                    bindata = pd.concat([pd.DataFrame(index=[start]), bindata, pd.DataFrame(index=[end])] )
+                else:
+                    bindata = pd.concat( [bindata, pd.DataFrame(index=[end])])
+
                 signal = bindata.resample("H").mean().fillna(0)
-                self.signals[bin] = signal["diffmedian"]
+                self.signals[bin] = signal[self.metric]
 
 
     def loadData(self):

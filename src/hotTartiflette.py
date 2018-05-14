@@ -33,6 +33,13 @@ ihr.loadData()
 wel = welch.Welch(nperseg=nperseg, minRMS=minRMS)
 wel.analyze(ihr.signals)
 
+fi = open("data/hotLinks.csv","w"):
+for link, (f, pspec) in wel.pspec.iteritems():
+    freqMax = f[Pxx_spec.argmax()]
+    if freqMax > 1.0/23 and freqMax < 1./25:
+        ampMax = np.sqrt(Pxx_spec.max())
+        fi.write("%s, %s, %s\n" % (link[0], link[1], freqMax, ampMax))
+fi.close()
 
 if __name__ == "__main__":
     logging.info("Plotting results...")

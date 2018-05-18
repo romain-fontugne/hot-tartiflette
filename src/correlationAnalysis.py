@@ -74,10 +74,11 @@ if __name__ == "__main__":
         hotlinksCount = pickle.load( open("data/hotlinks_%s_count.pickle" % agg, "r"))
 
 
-    dfihr = pd.DataFrame(data=ihrCount.values(), index=ihrCount.index)
-    dfhot = pd.DataFrame(data=hotLinksCount.values(), index=hotLinksCount.index)
+    dfihr = pd.DataFrame(data=ihrCount.values(), index=ihrCount.index, columns=["count"])
+    dfhot = pd.DataFrame(data=hotLinksCount.values(), index=hotLinksCount.index, columns=["count"])
 
-    dfall = dfihr.merge(dfhot, how="outer")
-    dfall = dfall.fillnan(0)
+    dfall = dfihr.merge(dfhot, how="outer", left_index=True, right_index=True, suffixes=["_ihr", "_hot"])
+    dfall = dfall.fillna(0)
 
     print stats.spearmanr(dfall)
+    pickle.dump(dfall, open("data/%s_all_count.pickle" % agg, "w"))

@@ -37,8 +37,9 @@ for link, (f, pspec) in wel.pspec.iteritems():
     freqMax = f[pspec.argmax()]
     print freqMax
     if freqMax < 1.0/23 and freqMax > 1.0/25:
+        ip = link[1:-1].split(",")
         ampMax = np.sqrt(pspec.max())
-        fi.write("%s, %s, %s, %s\n" % (link[0], link[1], freqMax, ampMax))
+        fi.write("%s, %s, %s, %s\n" % (ip[0], ip[1], freqMax, ampMax))
 fi.close()
 
 if __name__ == "__main__":

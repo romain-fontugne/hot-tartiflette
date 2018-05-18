@@ -69,7 +69,7 @@ if __name__ == "__main__":
             hotlinksCount[resfct(ip0)]+=1
             hotlinksCount[resfct(ip1)]+=1
 
-        pickle.dump(hotlinksCount, open("data/hotlinks_%_count.pickle" % agg, "w"))
+        pickle.dump(hotlinksCount, open("data/hotlinks_%s_count.pickle" % agg, "w"))
     else:
         hotlinksCount = pickle.load( open("data/hotlinks_%s_count.pickle" % agg, "r"))
 

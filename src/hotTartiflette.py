@@ -25,7 +25,6 @@ logging.info("Started")
 # Load data
 mapit = mapitData.MapitData()
 mapit.loadData()
-# ihr = ihrData.IhrData(fnames=["data/7922.csv", "data/1239.csv", "data/5511.csv", "data/7018.csv"], minDuration=minDuration, minSample=minSample)
 ihr = ihrData.IhrData(fnames=["data/ihr_delay_alarms_20180403.csv"],  minDate=minDate, minSample=minSample)
 ihr.loadData() 
 
@@ -33,12 +32,13 @@ ihr.loadData()
 wel = welch.Welch(nperseg=nperseg, minRMS=minRMS)
 wel.analyze(ihr.signals)
 
-fi = open("data/hotLinks.csv","w"):
+fi = open("data/hotLinks.csv","w")
 for link, (f, pspec) in wel.pspec.iteritems():
-    freqMax = f[Pxx_spec.argmax()]
-    if freqMax > 1.0/23 and freqMax < 1./25:
-        ampMax = np.sqrt(Pxx_spec.max())
-        fi.write("%s, %s, %s\n" % (link[0], link[1], freqMax, ampMax))
+    freqMax = f[pspec.argmax()]
+    print freqMax
+    if freqMax < 1.0/23 and freqMax > 1.0/25:
+        ampMax = np.sqrt(pspec.max())
+        fi.write("%s, %s, %s, %s\n" % (link[0], link[1], freqMax, ampMax))
 fi.close()
 
 if __name__ == "__main__":

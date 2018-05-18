@@ -56,5 +56,5 @@ for line in p1.stdout:
 
 
 logging.warn("Writing new reference file")
-pname = ihrname.rpartition(".")[2]+"_dir.pickle"
+pname = ihrname.rpartition(".")[0]+"_dir.pickle"
 pickle.dump(ref, open(pname, "w"))

@@ -5,12 +5,13 @@ from collections import defaultdict
 from scipy import stats
 import logging
 import glob
+import pandas as pd
 
 sys.path.append("../ip2asn/")
 import ip2asn
 
-agg = "asn"
-# agg = "country"
+# agg = "asn"
+agg = "country"
 ihrfname = "data/diffRTT_ref_20180410.pickle"
 hotfname = "data/hotLinks.csv"
 
@@ -65,17 +66,17 @@ if __name__ == "__main__":
         hotlinksCount = defaultdict(int)
 
         for line in fi.readlines():
-            ip0, ip1, _, _ = line.split(",")
-            hotlinksCount[resfct(ip0)]+=1
-            hotlinksCount[resfct(ip1)]+=1
+            ip0, ip1, _, _, _ = line.split(",")
+            hotlinksCount[resfct(ip0.strip())]+=1
+            hotlinksCount[resfct(ip1.strip())]+=1
 
         pickle.dump(hotlinksCount, open("data/hotlinks_%s_count.pickle" % agg, "w"))
     else:
         hotlinksCount = pickle.load( open("data/hotlinks_%s_count.pickle" % agg, "r"))
 
 
-    dfihr = pd.DataFrame(data=ihrCount.values(), index=ihrCount.index, columns=["count"])
-    dfhot = pd.DataFrame(data=hotLinksCount.values(), index=hotLinksCount.index, columns=["count"])
+    dfihr = pd.DataFrame(data=ihrCount.values(), index=ihrCount.keys(), columns=["count"])
+    dfhot = pd.DataFrame(data=hotlinksCount.values(), index=hotlinksCount.keys(), columns=["count"])
 
     dfall = dfihr.merge(dfhot, how="outer", left_index=True, right_index=True, suffixes=["_ihr", "_hot"])
     dfall = dfall.fillna(0)

@@ -10,8 +10,8 @@ import pandas as pd
 sys.path.append("../ip2asn/")
 import ip2asn
 
-# agg = "asn"
-agg = "country"
+agg = "asn"
+# agg = "country"
 ihrfname = "data/diffRTT_ref_20180410.pickle"
 hotfname = "data/hotLinks.csv"
 

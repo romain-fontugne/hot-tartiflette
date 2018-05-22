@@ -50,7 +50,7 @@ for line in p1.stdout:
                             linkRef["dir"] = {"far": defaultdict(int), "near":defaultdict(int)}
 
                         linkRef["dir"]["far"][ip1]+=1
-                        linkRef["dir"]["near"][ip1]+=1
+                        linkRef["dir"]["near"][ip0]+=1
 
         prevIps = ips
 

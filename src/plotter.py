@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -117,9 +119,8 @@ class Plotter(object):
             # Plot spectrums
             link = link.rpartition("_")[0]
             peer = False
-            for ip in link[1:-1].split(","):
-                if self.mapit.isInterdomain(ip) is not None:
-                    peer = True
+            if self.mapit.isInterdomain(link) is not None:
+                peer = True
 
             if peer:
                 self.interdomainLinks[link] = True

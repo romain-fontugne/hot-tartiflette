@@ -117,7 +117,9 @@ class Plotter(object):
         self.nbLinks = 0 
         for link, (f, Pxx_spec) in self.welch.pspec.iteritems():
             # Plot spectrums
-            link = link.rpartition("_")[0]
+            linkStr = link.rpartition("_")[0]
+            linkIPs = linkStr[1:-1].split(",") 
+            link = (linkIPs[0].strip(), linkIPs[1].strip())
             peer = False
             if self.mapit.isInterdomain(link) is not None:
                 peer = True

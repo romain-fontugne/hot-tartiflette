@@ -35,7 +35,6 @@ wel.analyze(ihr.signals)
 fi = open("data/hotLinks.csv","w")
 for link, (f, pspec) in wel.pspec.iteritems():
     freqMax = f[pspec.argmax()]
-    print freqMax
     if freqMax < 1.0/23 and freqMax > 1.0/25:
         ips, _, timebin = link.rpartition("_")
         ip = ips[1:-1].split(",")

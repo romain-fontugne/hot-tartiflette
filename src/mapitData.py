@@ -50,7 +50,7 @@ class MapitData(object):
 
     def isInterdomain(self, link):
         # check the link direction in the IHR reference
-        if link in self.ref:
+        if link in self.ref and "dir" in self.ref[link]:
             ip = max(self.ref[link]["dir"]["far"], key=self.ref[link]["dir"]["far"].get) 
 
             if ip in self.mapping: 
@@ -61,11 +61,12 @@ class MapitData(object):
         # not in the reference we can still check if one of the IP is found by
         # map-it
         else:
-            for ip0 in link[1:-1].split(","):
-                ip = ip0.strip()
+            for ip in link:
                 if ip in self.mapping:
                     return self.mapping[ip]
 
             return None
+
+        return None
 
 

@@ -62,13 +62,13 @@ class IhrData(object):
         for bin, bindata in grouped:
             if len(np.unique(bindata.index))>self.minSample:
                 # Extend the signal to span through the whole month
-                t0 = bindata.index[0]
-                start = datetime(t0.year, t0.month, 1) 
-                end = datetime(t0.year+(t0.month/12), (t0.month%12)+1, 1) 
-                if start not in bindata.index:
-                    bindata = pd.concat([pd.DataFrame(index=[start]), bindata, pd.DataFrame(index=[end])] )
-                else:
-                    bindata = pd.concat( [bindata, pd.DataFrame(index=[end])])
+                # t0 = bindata.index[0]
+                # start = datetime(t0.year, t0.month, 1) 
+                # end = datetime(t0.year+(t0.month/12), (t0.month%12)+1, 1) 
+                # if start not in bindata.index:
+                    # bindata = pd.concat([pd.DataFrame(index=[start]), bindata, pd.DataFrame(index=[end])] )
+                # else:
+                    # bindata = pd.concat( [bindata, pd.DataFrame(index=[end])])
 
                 signal = bindata.resample("H").mean().fillna(0)
                 self.signals[bin] = signal[self.metric]
